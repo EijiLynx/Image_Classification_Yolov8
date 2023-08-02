@@ -1,0 +1,441 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YOLO Image Classification</title>
+    <link
+      href="{{url_for('static',filename='css/main.css')}}"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <section class="m-0 bg-gray-100">
+      <div class="flex justify-center items-center p-0 h-screen w-screen">
+        <div
+          class="flex flex-col bg-white place-content-between box-border shadow-xl max-w-screen-md p-4"
+          id="drop-main"
+        >
+          <div class="drop-zone cursor-pointer" id="dropZone">
+            <div
+              class="flex items-center border-2 border-dashed border-gray-300 rounded-md p-8 h-52 text-center bg-[url('/static/images/icons8-upload.gif')] bg-no-repeat bg-contain bg-center"
+            >
+            
+              <label htmlFor="fileInput" class="cursor-pointer">
+                <p class="text-gray-600 mb-4">
+                  Drag and drop images here or click to select images.
+                </p>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bg-white box-border shadow-xl w-3/4 px-10 py-2 space-y-2"
+          id="image_preview"
+          hidden
+          >
+          <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"  id="more_image">Add More Images</button>
+          <div
+            class=" p-4 image-container overflow-y-auto bg-gray-50  max-h-[500px] grid grid-cols-1 lg:grid-cols-4 gap-4 scroll-smooth"
+            id="gridContainer"
+          ></div>
+          <div class="bg-white flex items-end justify-between">
+            <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" id="cancelButton">cancel</button>
+            <button type="button" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" id="classifyButton">Upload and Classify</button>
+            <div id="loading" hidden>
+              <button type="button"  class="text-white font-bold py-2 px-4 rounded bg-indigo-500 flex" disabled >
+                <svg fill='none' class="w-6 h-6 animate-spin" viewBox="0 0 32 32" xmlns='http://www.w3.org/2000/svg'>
+                  <path clip-rule='evenodd'
+                    d='M15.165 8.53a.5.5 0 01-.404.58A7 7 0 1023 16a.5.5 0 011 0 8 8 0 11-9.416-7.874.5.5 0 01.58.404z'
+                    fill='currentColor' fill-rule='evenodd' />
+                </svg>
+                Processing...
+              </button>
+            </div>
+            
+          </div>
+        </div>
+
+        <div id="output" hidden>
+          <div class="flex  bg-white">
+            <div class="px-4 pt-10 flex flex-col" id="max_thing">
+              <div class="flex  gap-4">
+                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" id="downloadButton">
+                  <svg class="animate-bounce fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+                  <span>Download</span>
+                </button>
+
+                <button class="bg-yellow-300 hover:bg-yellow-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" id="new_upload">
+                  <div class="animate-bounce delay-75">
+                    <svg class="rotate-180   fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+                  </div>
+                  <span>New Upload</span>
+                </button>
+              </div>
+              <div class="flex justify-center"> <span>Number of Instances</span></div>
+              <div class="flex justify-between" id="total_value"></div>
+            </div>
+            <div
+              class="bg-gray-50 grow p-3 image-container overflow-y-auto   max-h-[700px] grid grid-cols-4 gap-4 place-content-between scroll-smooth"
+              id="results_main"
+            ></div>
+          </div>
+          <div id="imageModal" class="modal">
+          <div class="modal-content">
+             <img id="expandedImage" src="" alt="Expanded Image">
+            <div id="imageDetails">
+                hello
+                <!-- Add your image descriptions and other details here -->
+              </div>
+          </div>
+        </div>
+
+         
+           
+        </div>
+      </div>
+      <div class="box-border  cursor-pointer rounded-lg shadow-xl" id="radius_box"></div>
+      <div
+        class=" rounded-t-lg overflow-hidden"
+        id="resultViewer"
+      ></div>
+      <div class="flex flex-wrap gap-2 rounded-b-lg" id="class_labels"></div>
+      <div class="px-2 font-bold  rounded-full text-white" id="getting_labels"></div>
+    </section>
+
+    <script>
+      // Get the drop zone and the grid container element
+      let selectedImages = [];
+      const dropZone = document.getElementById("dropZone");
+      const gridContainer = document.getElementById("gridContainer");
+      const classifyButton = document.getElementById("classifyButton");
+      const more_image = document.getElementById("more_image");
+      const resultViewer = document.getElementById("resultViewer");
+      const drop_main = document.getElementById("drop-main");
+      const image_preview = document.getElementById("image_preview");
+      const output = document.getElementById("output");
+      const total_value = document.getElementById("total_value");
+      const max_thing = document.getElementById("max_thing");
+      const radius_box = document.getElementById("radius_box");
+      const class_labels = document.getElementById("class_labels");
+      const results_main = document.getElementById("results_main");
+      const getting_labels = document.getElementById("getting_labels");
+      const download_btn = document.getElementById("downloadButton");
+      const modal = document.getElementById("imageModal");
+      const images = document.getElementsByClassName("clickable");
+      const expandedImage = document.getElementById("expandedImage");
+      const new_upload = document.getElementById("new_upload");
+
+      var classNames = ["birds", "cats", "dogs", "person"];
+      var class_type = [];
+
+      // Prevent the default behavior when images are dragged into the drop zone
+      dropZone.addEventListener("dragover", (event) => {
+        event.preventDefault();
+      });
+
+      // Handle the drop event
+      dropZone.addEventListener("drop", (event) => {
+        event.preventDefault();
+        handleFileUpload(event.dataTransfer.files);
+      });
+
+      function fileInput_file() {
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = "image/*";
+        fileInput.multiple = true;
+        fileInput.onchange = (event) => {
+          handleFileUpload(event.target.files);
+        };
+        fileInput.click();
+      }
+
+      // Handle the click event to trigger file input
+      dropZone.addEventListener("click", () => {
+        fileInput_file();
+      });
+
+      more_image.addEventListener("click", () => {
+        fileInput_file();
+      });
+
+      function handleFileUpload(files) {
+        drop_main.style.display = "none";
+        image_preview.hidden = false;
+        if (!files || files.length === 0) return;
+        // Remove any previous image previews
+
+        const fileArray = Array.from(files);
+        selectedImages = selectedImages
+          ? [...selectedImages, ...fileArray]
+          : fileArray; // Add new images to existing array or set it as the new array
+
+        fileArray.forEach((file) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const imageBase64 = reader.result;
+            const imgElement = document.createElement("img");
+            imgElement.src = imageBase64;
+            imgElement.alt = "Uploaded";
+            // Create a preview div for each image and add the image to it
+            const previewDiv = document.createElement("div");
+            // change to style
+            previewDiv.classList.add("preview");
+
+            previewDiv.appendChild(imgElement);
+
+            // Add the preview div to the grid container
+            gridContainer.appendChild(previewDiv);
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      // Event listener for the classifyButton click
+      classifyButton.addEventListener("click", () => {
+        if (selectedImages.length === 0) {
+          alert("Please select images to upload.");
+          return;
+        }
+
+        const formData = new FormData();
+        selectedImages.forEach((file) => {
+          formData.append("image", file);
+        });
+        classifyButton.style.display="none";
+        document.getElementById("cancelButton").disabled = true;
+        document.getElementById("loading").hidden = false;
+        // Send the formData containing the images to the backend for upload and classification
+        fetch("/upload", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // Process the classification results from the backend if needed
+            console.log("Classification Results:", data);
+            if (data.error) {
+              alert(data.error);
+              return;
+            }
+
+            // Add code to display the classification results on the webpage
+            displayClassificationResults(data.predictions);
+            displayImages();
+            // Add code to display the classification results on the webpage
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
+
+      function displayClassificationResults(data) {
+        const classCount = {};
+        var sortedByValueDescending;
+        // Loop through each item in the data list
+        for (const [filename, predictions] of data) {
+          // Create a div for each image
+          console.log(filename);
+          const tileas = predictions.map((prediction) => prediction.class);
+          class_type.push([filename, tileas]);
+
+          // Loop through the predictions for the current image
+          for (const prediction of predictions) {
+            const {
+              x_min,
+              y_min,
+              x_max,
+              y_max,
+              confidence,
+              class: predictedClass,
+            } = prediction;
+
+            const xMinValue = x_min;
+            const yMinValue = y_min;
+            const xMaxValue = x_max;
+            const yMaxValue = y_max;
+            const confidenceValue = confidence;
+            const classValue = predictedClass;
+            console.log("x_min", xMinValue);
+            console.log("y_min", yMinValue);
+            console.log("x_max", xMaxValue);
+            console.log("y_max", yMaxValue);
+            console.log("conf", confidenceValue);
+            console.log("class", classValue);
+
+            const classId = prediction.class;
+            if (classCount[classId]) {
+              classCount[classId]++;
+            } else {
+              classCount[classId] = 1;
+            }
+
+            console.log("Results:", predictions);
+          }
+
+          sortedByValueDescending = Object.entries(classCount).sort(
+            ([keyA, valueA], [keyB, valueB]) => {
+              return valueB - valueA; // Sort numerically in descending order
+            }
+          );
+        }
+        console.log(sortedByValueDescending);
+        getLabels(sortedByValueDescending);
+      }
+
+      function getLabels(sortedByValueDescending) {
+        for (const classId in sortedByValueDescending) {
+          const counter = sortedByValueDescending[classId][1];
+
+          const names = document.createElement("div");
+          const values = document.createElement("div");
+
+          names.innerHTML =
+            classNames[Number(sortedByValueDescending[classId][0])];
+          values.innerHTML = counter;
+
+          // Create a copy of the div using cloneNode
+          const divCopy = total_value.cloneNode(true);
+          divCopy.appendChild(names);
+          divCopy.appendChild(values);
+
+          // Append the copy to the new location
+          max_thing.appendChild(divCopy);
+
+          //console.log(`Class ID: ${sortedByValueDescending[classId][0]}, Count: ${counter}`);
+        }
+      }
+
+      // Event listener for the cancelButton click
+      cancelButton.addEventListener("click", () => {
+        drop_main.style.display = "block";
+        image_preview.hidden = true;
+        // Clear the selectedImages array
+        selectedImages = [];
+
+        // Clear the preview images from the gridContainer
+        gridContainer.innerHTML = "";
+      });
+
+      //Display the results
+      async function displayImages() {
+        // Fetch the image paths from the backend
+        const response = await fetch("/get_images");
+        const data = await response.json();
+        const colors = ['#FF0000', '#0000FF', '#00FF00', '#FFA500', '#800080'];
+
+        var kkal = 0;
+        data.forEach((image_paths) => {
+          const uniqueNumbers = new Set();
+          const imgElement = document.createElement("img");
+          imgElement.src = image_paths;
+          imgElement.alt = "Image" + (kkal + 1);
+          imgElement.style.width = "181px";
+          imgElement.style.height = "145px";
+          imgElement.classList.add("clickable");
+          imgElement.onclick = function() { showExpandedImage(this); };
+
+          // Create a preview div for each image and add the image to it
+          const item = class_type[kkal];
+          //console.log("item",item);
+          //remove dups
+          const name = item[0];
+          const numbers = item[1];
+          for (const number of numbers) {
+            uniqueNumbers.add(number);
+          }
+
+          const uniqueNumbersArray = Array.from(uniqueNumbers);
+
+          //console.log("name",name,"numebers",numbers);
+
+          // If you want to access each individual number in the "numbers" array
+
+          const divCopy = radius_box.cloneNode(true);
+          const main_child = resultViewer.cloneNode(true);
+          const write_labels = class_labels.cloneNode(true);
+
+          // Add the preview div to the grid container
+          console.log("numbers", uniqueNumbersArray);
+
+          for (const number of uniqueNumbersArray) {
+            const get_labels = getting_labels.cloneNode(true);
+            get_labels.innerHTML = classNames[number];
+            get_labels.style.backgroundColor = colors[number];
+            write_labels.appendChild(get_labels);
+            
+            console.log("Individual Number:", number);
+          }
+
+          main_child.appendChild(imgElement);
+          divCopy.appendChild(main_child);
+          divCopy.appendChild(write_labels);
+
+          results_main.appendChild(divCopy);
+
+          image_preview.hidden = true;
+          output.hidden = false;
+
+          kkal += 1;
+        });
+        console.log("class_type", class_type);
+      }
+
+      function downloadTextFile(content, fileName) {
+        const blob = new Blob([content], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = fileName;
+        link.click();
+
+        URL.revokeObjectURL(url);
+      }
+      download_btn.addEventListener("click", () => {
+        // Your AJAX request to the Flask backend here
+        fetch("/download_file")
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("file Failed");
+            }
+            return response.text();
+          })
+          .then((data) => {
+            downloadTextFile(data, "annotations.txt");
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            // Handle the error here, show an error message to the user, etc.
+          });
+      });
+      function showExpandedImage(image) {
+        // Get the image source and description from the clicked image
+        const src = image.src;
+        const alt = image.alt;
+    
+        // Set the expanded image source and description
+        const expandedImage = document.getElementById("expandedImage");
+        expandedImage.src = src;
+        expandedImage.alt = alt;
+    
+        // Show the modal
+        const modal = document.getElementById("imageModal");
+        modal.style.display = "flex";
+      }
+
+      window.addEventListener("click", function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      });
+
+      new_upload.addEventListener('click', function() {
+        // Reset the webpage
+        location.reload();
+    });
+    </script>
+  </body>
+</html>
