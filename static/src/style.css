@@ -30,20 +30,10 @@
     max-width: 90%;
     max-height: 90%;
   }
-  /* Style for the close button (X) */
-  /* .close {
-    position: absolute;
-    top: 15px;
-    right: 35px;
-    font-size: 40px;
-    font-weight: bold;
-    color: #f1f1f1;
-    cursor: pointer;
-  } */
+
   
   /* Other styles for the image details and other content in the modal */
   #imageDetails {
-    color: white;
     padding: 10px;
   }
   

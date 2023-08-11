@@ -11,8 +11,15 @@
     />
   </head>
   <body>
-    <section class="m-0 bg-gray-100">
-      <div class="flex justify-center items-center p-0 h-screen w-screen">
+    
+    <section class="m-0 bg-gradient-to-r from-rose-100 to-teal-100 ">
+      <div class="flex justify-center">
+        <h1 class="  text-5xl">
+          Image Classification Box Annotations
+        </h1>
+      </div> 
+      <div class="flex justify-center items-center p-0 h-[94.9vh] w-screen">
+        
         <div
           class="flex flex-col bg-white place-content-between box-border shadow-xl max-w-screen-md p-4"
           id="drop-main"
@@ -39,7 +46,8 @@
           <div
             class=" p-4 image-container overflow-y-auto bg-gray-50  max-h-[500px] grid grid-cols-1 lg:grid-cols-4 gap-4 scroll-smooth"
             id="gridContainer"
-          ></div>
+          >
+        </div>
           <div class="bg-white flex items-end justify-between">
             <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" id="cancelButton">cancel</button>
             <button type="button" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" id="classifyButton">Upload and Classify</button>
@@ -84,8 +92,8 @@
           <div id="imageModal" class="modal">
           <div class="modal-content">
              <img id="expandedImage" src="" alt="Expanded Image">
-            <div id="imageDetails">
-                hello
+            <div id="imageDetails" class="text-black">
+                
                 <!-- Add your image descriptions and other details here -->
               </div>
           </div>
@@ -126,6 +134,7 @@
       const images = document.getElementsByClassName("clickable");
       const expandedImage = document.getElementById("expandedImage");
       const new_upload = document.getElementById("new_upload");
+      const image_details = document.getElementById("imageDetails");
 
       var classNames = ["birds", "cats", "dogs", "person"];
       var class_type = [];
@@ -183,6 +192,7 @@
             const previewDiv = document.createElement("div");
             // change to style
             previewDiv.classList.add("preview");
+            previewDiv.classList.add("shadow-2xl")
 
             previewDiv.appendChild(imgElement);
 
@@ -324,14 +334,14 @@
         // Fetch the image paths from the backend
         const response = await fetch("/get_images");
         const data = await response.json();
-        const colors = ['#FF0000', '#0000FF', '#00FF00', '#FFA500', '#800080'];
+        const colors = ['#FF0000', '#ADD8E6', '#F8C8DC', '#FFA500', '#800080'];
 
         var kkal = 0;
         data.forEach((image_paths) => {
           const uniqueNumbers = new Set();
           const imgElement = document.createElement("img");
           imgElement.src = image_paths;
-          imgElement.alt = "Image" + (kkal + 1);
+          imgElement.alt = (kkal);
           imgElement.style.width = "181px";
           imgElement.style.height = "145px";
           imgElement.classList.add("clickable");
@@ -424,6 +434,8 @@
         // Show the modal
         const modal = document.getElementById("imageModal");
         modal.style.display = "flex";
+        image_details.innerHTML = class_type[alt][0];
+
       }
 
       window.addEventListener("click", function(event) {
