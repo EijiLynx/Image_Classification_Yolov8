@@ -1,8 +1,6 @@
 # app.py
 from flask import Flask, render_template, request, jsonify
-from PIL import Image
 import os
-import glob
 import cv2
 import json
 import shutil
@@ -34,7 +32,8 @@ def delete_folder_and_contents(folder_path):
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def wriylop(result):
+
+def wriylop(result):   # convert results to annotation format
     print("hello")
     ggh = []
     for i in range(len(result.boxes)):
@@ -66,8 +65,9 @@ def wriylop(result):
 
 
 @app.route('/upload', methods=['POST'])
-def upload_images():
+def upload_images(): # for the upload and classification
     global results,names,image_path, json_str
+    json_str = ""
     if 'image' not in request.files:
         return jsonify({'error': 'No images provided'}), 400
 
@@ -155,6 +155,7 @@ def download_file():
         return json_str
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 
 
 @app.route('/', methods=['GET', 'POST'])

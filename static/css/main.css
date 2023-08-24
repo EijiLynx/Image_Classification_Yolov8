@@ -624,12 +624,24 @@ video {
   height: 94.9vh;
 }
 
+.h-\[326px\] {
+  height: 326px;
+}
+
 .max-h-\[500px\] {
   max-height: 500px;
 }
 
 .max-h-\[700px\] {
   max-height: 700px;
+}
+
+.max-h-\[326px\] {
+  max-height: 326px;
+}
+
+.max-h-\[244px\] {
+  max-height: 244px;
 }
 
 .w-3\/4 {

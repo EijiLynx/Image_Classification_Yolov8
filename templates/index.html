@@ -11,24 +11,22 @@
     />
   </head>
   <body>
-    
-    <section class="m-0 bg-gradient-to-r from-rose-100 to-teal-100 ">
+    <section class="m-0 bg-gradient-to-r from-rose-100 to-teal-100">
       <div class="flex justify-center">
-        <h1 class="  text-5xl">
-          Image Classification Box Annotations
-        </h1>
-      </div> 
+        <h1 class="text-5xl">Image Classification Box Annotations</h1>
+      </div>
       <div class="flex justify-center items-center p-0 h-[94.9vh] w-screen">
-        
         <div
           class="flex flex-col bg-white place-content-between box-border shadow-xl max-w-screen-md p-4"
           id="drop-main"
         >
           <div class="drop-zone cursor-pointer" id="dropZone">
             <div
-              class="flex items-center border-2 border-dashed border-gray-300 rounded-md p-8 h-52 text-center bg-[url('/static/images/icons8-upload.gif')] bg-no-repeat bg-contain bg-center"
+              class="flex items-center border-2 border-dashed 
+              border-gray-300 rounded-md p-8 h-52 text-center 
+              bg-[url('/static/images/icons8-upload.gif')] 
+              bg-no-repeat bg-contain bg-center"
             >
-            
               <label htmlFor="fileInput" class="cursor-pointer">
                 <p class="text-gray-600 mb-4">
                   Drag and drop images here or click to select images.
@@ -41,75 +39,127 @@
           class="bg-white box-border shadow-xl w-3/4 px-10 py-2 space-y-2"
           id="image_preview"
           hidden
+        >
+          <button
+            type="button"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            id="more_image"
           >
-          <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"  id="more_image">Add More Images</button>
+            Add More Images
+          </button>
           <div
-            class=" p-4 image-container overflow-y-auto bg-gray-50  max-h-[500px] grid grid-cols-1 lg:grid-cols-4 gap-4 scroll-smooth"
+            class="p-4 image-container overflow-y-auto bg-gray-50 max-h-[500px] grid grid-cols-1 lg:grid-cols-4 gap-4 scroll-smooth"
             id="gridContainer"
-          >
-        </div>
+          ></div>
           <div class="bg-white flex items-end justify-between">
-            <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" id="cancelButton">cancel</button>
-            <button type="button" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" id="classifyButton">Upload and Classify</button>
+            <button
+              type="button"
+              class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              id="cancelButton"
+            >
+              cancel
+            </button>
+            <button
+              type="button"
+              class="bg-green-500 hover:bg-green-700
+               text-white font-bold py-2 px-4 rounded"
+              id="classifyButton"
+            >
+              Upload and Classify
+            </button>
             <div id="loading" hidden>
-              <button type="button"  class="text-white font-bold py-2 px-4 rounded bg-indigo-500 flex" disabled >
-                <svg fill='none' class="w-6 h-6 animate-spin" viewBox="0 0 32 32" xmlns='http://www.w3.org/2000/svg'>
-                  <path clip-rule='evenodd'
-                    d='M15.165 8.53a.5.5 0 01-.404.58A7 7 0 1023 16a.5.5 0 011 0 8 8 0 11-9.416-7.874.5.5 0 01.58.404z'
-                    fill='currentColor' fill-rule='evenodd' />
+              <button
+                type="button"
+                class="text-white font-bold py-2 px-4 rounded bg-indigo-500 flex"
+                disabled
+              >
+                <svg
+                  fill="none"
+                  class="w-6 h-6 animate-spin"
+                  viewBox="0 0 32 32"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M15.165 8.53a.5.5 0 01-.404.58A7 7 0 1023 16a.5.5 0 011 0 8 8 0 11-9.416-7.874.5.5 0 01.58.404z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
                 </svg>
                 Processing...
               </button>
             </div>
-            
           </div>
         </div>
 
         <div id="output" hidden>
-          <div class="flex  bg-white">
+          <div class="flex bg-white">
             <div class="px-4 pt-10 flex flex-col" id="max_thing">
-              <div class="flex  gap-4">
-                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" id="downloadButton">
-                  <svg class="animate-bounce fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+              <div class="flex gap-4">
+                <button
+                  class="bg-gray-300 hover:bg-gray-400 
+                  text-gray-800 font-bold py-2 px-4 
+                  rounded inline-flex items-center"
+                  id="downloadButton"
+                >
+                  <svg
+                    class="animate-bounce fill-current w-4 h-4 mr-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+                  </svg>
                   <span>Download</span>
                 </button>
 
-                <button class="bg-yellow-300 hover:bg-yellow-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" id="new_upload">
+                <button
+                  class="bg-yellow-300 hover:bg-yellow-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
+                  id="new_upload"
+                >
                   <div class="animate-bounce delay-75">
-                    <svg class="rotate-180   fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+                    <svg
+                      class="rotate-180 fill-current w-4 h-4 mr-2"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+                    </svg>
                   </div>
                   <span>New Upload</span>
                 </button>
               </div>
-              <div class="flex justify-center"> <span>Number of Instances</span></div>
+              <div class="flex justify-center">
+                <span>Number of Instances</span>
+              </div>
               <div class="flex justify-between" id="total_value"></div>
             </div>
             <div
-              class="bg-gray-50 grow p-3 image-container overflow-y-auto   max-h-[700px] grid grid-cols-4 gap-4 place-content-between scroll-smooth"
+              class="bg-gray-50 grow p-3 image-container 
+              overflow-y-auto max-h-[700px] grid grid-cols-4 
+              gap-4 place-content-between scroll-smooth"
               id="results_main"
             ></div>
           </div>
           <div id="imageModal" class="modal">
-          <div class="modal-content">
-             <img id="expandedImage" src="" alt="Expanded Image">
-            <div id="imageDetails" class="text-black">
-                
+            <div class="modal-content">
+              <img id="expandedImage" src="" alt="Expanded Image" />
+              <div id="imageDetails" class="text-black">
                 <!-- Add your image descriptions and other details here -->
               </div>
+            </div>
           </div>
         </div>
-
-         
-           
-        </div>
       </div>
-      <div class="box-border  cursor-pointer rounded-lg shadow-xl" id="radius_box"></div>
       <div
-        class=" rounded-t-lg overflow-hidden"
-        id="resultViewer"
+        class="box-border cursor-pointer rounded-lg shadow-xl"
+        id="radius_box"
       ></div>
+      <div class="rounded-t-lg overflow-hidden" id="resultViewer"></div>
       <div class="flex flex-wrap gap-2 rounded-b-lg" id="class_labels"></div>
-      <div class="px-2 font-bold  rounded-full text-white" id="getting_labels"></div>
+      <div
+        class="px-2 font-bold rounded-full text-white"
+        id="getting_labels"
+      ></div>
     </section>
 
     <script>
@@ -149,7 +199,7 @@
         event.preventDefault();
         handleFileUpload(event.dataTransfer.files);
       });
-
+      // Handle the file picker
       function fileInput_file() {
         const fileInput = document.createElement("input");
         fileInput.type = "file";
@@ -165,11 +215,11 @@
       dropZone.addEventListener("click", () => {
         fileInput_file();
       });
-
+      // handle the add more image
       more_image.addEventListener("click", () => {
         fileInput_file();
       });
-
+      // handles the the image display
       function handleFileUpload(files) {
         drop_main.style.display = "none";
         image_preview.hidden = false;
@@ -192,7 +242,8 @@
             const previewDiv = document.createElement("div");
             // change to style
             previewDiv.classList.add("preview");
-            previewDiv.classList.add("shadow-2xl")
+            previewDiv.classList.add("shadow-2xl");
+            previewDiv.classList.add("max-h-[244px]");
 
             previewDiv.appendChild(imgElement);
 
@@ -214,7 +265,7 @@
         selectedImages.forEach((file) => {
           formData.append("image", file);
         });
-        classifyButton.style.display="none";
+        classifyButton.style.display = "none";
         document.getElementById("cancelButton").disabled = true;
         document.getElementById("loading").hidden = false;
         // Send the formData containing the images to the backend for upload and classification
@@ -334,18 +385,20 @@
         // Fetch the image paths from the backend
         const response = await fetch("/get_images");
         const data = await response.json();
-        const colors = ['#FF0000', '#ADD8E6', '#F8C8DC', '#FFA500', '#800080'];
+        const colors = ["#FF0000", "#ADD8E6", "#F8C8DC", "#FFA500", "#800080"];
 
         var kkal = 0;
         data.forEach((image_paths) => {
           const uniqueNumbers = new Set();
           const imgElement = document.createElement("img");
           imgElement.src = image_paths;
-          imgElement.alt = (kkal);
+          imgElement.alt = kkal;
           imgElement.style.width = "181px";
           imgElement.style.height = "145px";
           imgElement.classList.add("clickable");
-          imgElement.onclick = function() { showExpandedImage(this); };
+          imgElement.onclick = function () {
+            showExpandedImage(this);
+          };
 
           // Create a preview div for each image and add the image to it
           const item = class_type[kkal];
@@ -375,7 +428,7 @@
             get_labels.innerHTML = classNames[number];
             get_labels.style.backgroundColor = colors[number];
             write_labels.appendChild(get_labels);
-            
+
             console.log("Individual Number:", number);
           }
 
@@ -425,29 +478,29 @@
         // Get the image source and description from the clicked image
         const src = image.src;
         const alt = image.alt;
-    
+
         // Set the expanded image source and description
         const expandedImage = document.getElementById("expandedImage");
         expandedImage.src = src;
         expandedImage.alt = alt;
-    
+
         // Show the modal
         const modal = document.getElementById("imageModal");
         modal.style.display = "flex";
         image_details.innerHTML = class_type[alt][0];
-
       }
 
-      window.addEventListener("click", function(event) {
+      window.addEventListener("click", function (event) {
         if (event.target == modal) {
           modal.style.display = "none";
         }
       });
 
-      new_upload.addEventListener('click', function() {
+      new_upload.addEventListener("click", function () {
         // Reset the webpage
         location.reload();
-    });
+        
+      });
     </script>
   </body>
 </html>
