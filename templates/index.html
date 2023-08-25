@@ -10,17 +10,17 @@
       rel="stylesheet"
     />
   </head>
-  <body>
-    <section class="m-0 bg-gradient-to-r from-rose-100 to-teal-100">
-      <div class="flex justify-center">
-        <h1 class="text-5xl">Image Classification Box Annotations</h1>
+  <body class="bg-gradient-to-r from-rose-100 to-teal-100">
+    <section class="m-0 flex flex-col items-center justify-center h-screen">
+      <div class="flex  justify-center">
+        <h1 class="text-5xl text-center">Image Classification Box Annotations</h1>
       </div>
-      <div class="flex justify-center items-center p-0 h-[94.9vh] w-screen">
+      <div class="flex justify-center items-center p-0 h-screen w-screen">
         <div
-          class="flex flex-col bg-white place-content-between box-border shadow-xl max-w-screen-md p-4"
+          class="flex flex-col items-center w-11/12 lg:w-[472.7px] bg-white place-content-between box-border shadow-xl max-w-screen-md p-4"
           id="drop-main"
         >
-          <div class="drop-zone cursor-pointer" id="dropZone">
+          <div class="drop-zone cursor-pointer " id="dropZone">
             <div
               class="flex items-center border-2 border-dashed 
               border-gray-300 rounded-md p-8 h-52 text-center 
@@ -28,15 +28,15 @@
               bg-no-repeat bg-contain bg-center"
             >
               <label htmlFor="fileInput" class="cursor-pointer">
-                <p class="text-gray-600 mb-4">
-                  Drag and drop images here or click to select images.
-                </p>
+                Click to select images
+                
+              <span class="hidden sm:inline"> or Drag and drop images here.</span>
               </label>
             </div>
           </div>
         </div>
         <div
-          class="bg-white box-border shadow-xl w-3/4 px-10 py-2 space-y-2"
+          class="bg-white box-border shadow-xl w-11/12 lg:w-3/4 px-2 lg:px-10 py-2 space-y-2"
           id="image_preview"
           hidden
         >
@@ -93,17 +93,17 @@
         </div>
 
         <div id="output" hidden>
-          <div class="flex bg-white">
-            <div class="px-4 pt-10 flex flex-col" id="max_thing">
-              <div class="flex gap-4">
+          <div class="flex flex-col lg:flex-row bg-white">
+            <div class=" px-1 lg:px-4 pt-2 lg:pt-10 flex flex-col" id="max_thing">
+              <div class="flex justify-between w-auto lg:w-64 lg:gap-4">
                 <button
                   class="bg-gray-300 hover:bg-gray-400 
-                  text-gray-800 font-bold py-2 px-4 
+                  text-gray-800 font-bold py-1 px-2 lg:py-2 lg:px-2 
                   rounded inline-flex items-center"
                   id="downloadButton"
                 >
                   <svg
-                    class="animate-bounce fill-current w-4 h-4 mr-2"
+                    class="animate-bounce fill-current w-4 h-4 mr-2 hidden lg:flex flex-col"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                   >
@@ -113,12 +113,12 @@
                 </button>
 
                 <button
-                  class="bg-yellow-300 hover:bg-yellow-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
+                  class="bg-yellow-300 hover:bg-yellow-400 text-gray-800 font-bold py-1 px-2 lg:py-2 lg:px-2 rounded inline-flex items-center"
                   id="new_upload"
                 >
                   <div class="animate-bounce delay-75">
                     <svg
-                      class="rotate-180 fill-current w-4 h-4 mr-2"
+                      class="rotate-180 fill-current w-4 h-4 mr-2 hidden lg:inline-flex"
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 20 20"
                     >
@@ -134,8 +134,8 @@
               <div class="flex justify-between" id="total_value"></div>
             </div>
             <div
-              class="bg-gray-50 grow p-3 image-container 
-              overflow-y-auto max-h-[700px] grid grid-cols-4 
+              class="bg-gray-50 grow p-3 image-container
+              overflow-y-auto max-h-[500px] lg:max-h-[700px] grid grid-cols-1 lg:grid-cols-4
               gap-4 place-content-between scroll-smooth"
               id="results_main"
             ></div>
@@ -151,7 +151,7 @@
         </div>
       </div>
       <div
-        class="box-border cursor-pointer rounded-lg shadow-xl"
+        class="box-border cursor-pointer rounded-lg shadow-xl flex flex-col justify-between"
         id="radius_box"
       ></div>
       <div class="rounded-t-lg overflow-hidden" id="resultViewer"></div>
@@ -393,9 +393,9 @@
           const imgElement = document.createElement("img");
           imgElement.src = image_paths;
           imgElement.alt = kkal;
-          imgElement.style.width = "181px";
-          imgElement.style.height = "145px";
           imgElement.classList.add("clickable");
+          imgElement.classList.add("max-h-[400px]");
+          imgElement.classList.add("lg:max-h-[300px]");
           imgElement.onclick = function () {
             showExpandedImage(this);
           };

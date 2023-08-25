@@ -41,3 +41,7 @@ psutil  # system utilization
 # albumentations>=1.0.3
 # pycocotools>=2.0.6  # COCO mAP
 # roboflow
+
+
+# Flask ---------------------------------------
+Flask>=2.0.1
