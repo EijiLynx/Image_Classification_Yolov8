@@ -9,6 +9,7 @@ from ultralytics import YOLO
 app = Flask(__name__)
 
 model = YOLO('best.pt')  # Load the pretrained YOLOv8n model
+# model = YOLO('yolov8n.pt')
 
 
 UPLOAD_FOLDER = 'uploads'

@@ -31,9 +31,8 @@ Creating annotated datasets for custom object classification is a time-consuming
 
 ## Getting Started
 
-1. Clone this repository to your local machine.
-2. Install the required dependencies using `pip install -r requirements.txt`.
-3. Run the application using `python app.py`.
+1. Install the required dependencies using `pip install -r requirements.txt`.
+2. Run the application using `python app.py`.
 
 ## Model Used
 
@@ -65,12 +64,12 @@ The YOLOv8 model is trained to detect the following custom object classes:
 
 ## Navigation
 
-Your web application includes the following sections:
+The web application includes the following sections:
 
 - **Home**: Landing page with project overview
 - **Upload & Classify**: Allows users to upload images and perform automatic classification
 - **View Results**: Displays annotated results and allows users to view images and annotations
-- **Download**: Provides the option to download annotated results in JSON format
+- **Download**: Provides the option to download annotated results in txt format
 
 ### Images
 
